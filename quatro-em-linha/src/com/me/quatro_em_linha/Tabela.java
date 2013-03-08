@@ -14,64 +14,90 @@ public class Tabela implements Screen {
 	int player_actual;
 	float w, h;
 	Vector3 mpos = new Vector3(0, 0, 0);
-	//Vector2 pos[][];
+	boolean end_game_W, end_game_F;
+	int time=180;
+	int timer=0;
 	
 	Tabela(MainGame n){
 		tab = new Ficha[6][7];
 		maingame = n;
 		player_actual=0;
+		end_game_W=false;
+		end_game_F=false;
 		make_null();
 		
-		/*pos = new Vector2[1][7];
-		pos[0][0] = new Vector2(Gdx.graphics.getWidth()/7, 1); 
-		pos[0][1] = new Vector2(2*Gdx.graphics.getWidth()/7, 1);
-		pos[0][2] = new Vector2(3*Gdx.graphics.getWidth()/7, 1);
-		pos[0][3] = new Vector2(4*Gdx.graphics.getWidth()/7, 1);
-		pos[0][4] = new Vector2(5*Gdx.graphics.getWidth()/7, 1);
-		pos[0][5] = new Vector2(6*Gdx.graphics.getWidth()/7, 1);
-		pos[0][6] = new Vector2(Gdx.graphics.getWidth(), 1);*/
 		
 	}
 	
 	@Override
 	public void render(float delta) {
-		// TODO Auto-generated method stub
-		Gdx.gl.glClearColor(1, 0.8f, 0, 1);
-		Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
-		mpos.set(Gdx.input.getX(), Gdx.input.getY(), 0);
-		maingame.camera.unproject(mpos);
-		w = Gdx.graphics.getWidth();
-		h = Gdx.graphics.getHeight();
 		
-		if(Gdx.input.justTouched()){
-			Gdx.app.log("posx", " "+Gdx.input.getX());
-			Gdx.app.log("posy", " "+Gdx.input.getY()+"\n");
+		if (Gdx.input.justTouched()) {
+			Gdx.app.log("posx", " " + Gdx.input.getX());
+			Gdx.app.log("posy", " " + Gdx.input.getY() + "\n");
 		}
 		
-		for(int i=1; i<7; i++){
-			MainGame.renderer.begin(ShapeType.Line);
-			MainGame.renderer.line(i*w/7, 0, i*w/7, h);
-			MainGame.renderer.end();
+		if (!end_game_F&&!end_game_W) {
+			// TODO Auto-generated method stub
+			Gdx.gl.glClearColor(1, 0.8f, 0, 1);
+			Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
+			mpos.set(Gdx.input.getX(), Gdx.input.getY(), 0);
+			maingame.camera.unproject(mpos);
+			w = Gdx.graphics.getWidth();
+			h = Gdx.graphics.getHeight();
+			
+			for (int i = 1; i < 7; i++) {
+				MainGame.renderer.begin(ShapeType.Line);
+				MainGame.renderer.line(i * w / 7, 0, i * w / 7, h);
+				MainGame.renderer.end();
+			}
+			for (int i = 1; i < 6; i++) {
+				MainGame.renderer.begin(ShapeType.Line);
+				MainGame.renderer.line(0, i * h / 6, w, i * h / 6);
+				MainGame.renderer.end();
+			}
+			if (Gdx.input.justTouched()) {
+				if ((Gdx.input.getX() < w / 7) && (Gdx.input.getX() > 0)) {
+					nova_ficha(0);
+				} else if ((Gdx.input.getX() < 2 * w / 7)
+						&& (Gdx.input.getX() > w / 7)) {
+					nova_ficha(1);
+				} else if ((Gdx.input.getX() < 3 * w / 7)
+						&& (Gdx.input.getX() > 2 * w / 7)) {
+					nova_ficha(2);
+				} else if ((Gdx.input.getX() < 4 * w / 7)
+						&& (Gdx.input.getX() > 3 * w / 7)) {
+					nova_ficha(3);
+				} else if ((Gdx.input.getX() < 5 * w / 7)
+						&& (Gdx.input.getX() > 4 * w / 7)) {
+					nova_ficha(4);
+				} else if ((Gdx.input.getX() < 6 * w / 7)
+						&& (Gdx.input.getX() > 5 * w / 7)) {
+					nova_ficha(5);
+				} else if ((Gdx.input.getX() < w)) {
+					nova_ficha(6);
+				} else {
+					Gdx.app.log("DAFUK", "Dis aint supose to apear!");
+				}
+			}
+			draw_ficha();
+			end_game_W = check_win();
+			end_game_F = check_full();
+			Gdx.app.log("win", " " + end_game_W);
+			Gdx.app.log("board full", " " + end_game_F);
 		}
-		
-		for(int i=1; i<6; i++){
-			MainGame.renderer.begin(ShapeType.Line);
-			MainGame.renderer.line(0, i*h/6, w, i*h/6);
-			MainGame.renderer.end();
+		else{
+			if(timer >= time)
+				maingame.restartGame();
+			else timer++;
+			
+			Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
+			/*MainGame.batch.begin();
+			if(player_actual==3)
+				MainGame.draw.draw(MainGame.batch);
+			MainGame.batch.end();*/
+			
 		}
-		
-		if(Gdx.input.justTouched()){
-			if((Gdx.input.getX()<w/7)&&(Gdx.input.getX()>0)){nova_ficha(0);}
-			else if((Gdx.input.getX()<2*w/7)&&(Gdx.input.getX()>w/7)){nova_ficha(1);}
-			else if((Gdx.input.getX()<3*w/7)&&(Gdx.input.getX()>2*w/7)){nova_ficha(2);}
-			else if((Gdx.input.getX()<4*w/7)&&(Gdx.input.getX()>3*w/7)){nova_ficha(3);}
-			else if((Gdx.input.getX()<5*w/7)&&(Gdx.input.getX()>4*w/7)){nova_ficha(4);}
-			else if((Gdx.input.getX()<6*w/7)&&(Gdx.input.getX()>5*w/7)){nova_ficha(5);}
-			else if((Gdx.input.getX()<w)){nova_ficha(6);}
-			else {Gdx.app.log("DAFUK:", "YOU DIDNT SEE NOTHING!");}
-		}
-		
-		draw_ficha();
 		
 		
 	}
@@ -117,7 +143,30 @@ public class Tabela implements Screen {
 	}
 	
 	boolean check_win(){
+		//horizontal test
+		for (int i=5;i<=0;i--){
+			if((tab[i][0].jogador==tab[i][1].jogador)&&(tab[i][2].jogador==tab[i][3].jogador)){
+				Gdx.app.log("winH", " "+tab[i][0].jogador);
+				return true;
+			}
+		}
+	
+		
+		
 		return false;
+	}
+	
+	boolean check_full(){
+		while(true){
+			for(int i=0;i<6;i++){
+				for(int j=0;j<7;j++){
+					if(tab[i][j]==null)
+						return false;
+				}
+			}
+			player_actual=3;
+			return true;
+		}
 	}
 
 	@Override
