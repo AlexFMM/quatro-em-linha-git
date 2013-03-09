@@ -1,6 +1,7 @@
 package com.me.quatro_em_linha;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL10;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
@@ -33,6 +34,11 @@ public class Tabela implements Screen {
 		
 		MainGame.batch.setProjectionMatrix(maingame.camera.combined);
 		
+		if(Gdx.input.isKeyPressed(Keys.BACK))
+		{
+			maingame.setScreen(maingame.mainmenu);
+		}
+		
 		if (Gdx.input.justTouched()) {
 			Gdx.app.log("posx", " " + Gdx.input.getX());
 			Gdx.app.log("posy", " " + Gdx.input.getY() + "\n");
@@ -42,6 +48,11 @@ public class Tabela implements Screen {
 			// TODO Auto-generated method stub
 			Gdx.gl.glClearColor(1, 0.8f, 0, 1);
 			Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
+			
+			MainGame.batch.begin();
+			MainGame.tabela_spr.draw(MainGame.batch);
+			MainGame.batch.end();
+			
 			MainGame.renderer.setColor(1, 1, 1, 1);
 			mpos.set(Gdx.input.getX(), Gdx.input.getY(), 0);
 			maingame.camera.unproject(mpos);
@@ -74,8 +85,9 @@ public class Tabela implements Screen {
 			end_game_F = check_full();
 		}
 		else{
-			if(timer >= time)
-				maingame.restartGame();
+			if(timer >= time){
+				maingame.setScreen(maingame.mainmenu);
+			}
 			else timer++;
 			
 			Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
