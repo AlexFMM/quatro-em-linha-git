@@ -253,11 +253,83 @@ public class Tabela implements Screen {
 			
 		}
 		
+		
+		for(int i=0;i<6;i++)
+		{
+			for(int j=0;j<6;j++)
+			{
+				if(check_diag_dir_baixo(i, j)) {
+					Gdx.app.log("win diagonal", "baixo");
+					return true;
+				}
+				
+				if(check_diag_dir_cima(i, j)) {
+					Gdx.app.log("win diagonal", "cima");
+					return true;
+				}
+			}
+		}
+		
 		return false;
 	}
 	
+
+	boolean check_diag_dir_baixo(int i, int j)
+	{
+		int jogador,count;
+		if(tab[i][j] != null){
+			jogador = tab[i][j].jogador;
+			count = 0;
+		}
+		else return false;
+		
+		for(int a=0;a<4;a++)
+		{
+			
+			if (i+a < 6 && j+a <7) {
+				if (tab[i + a][j + a] != null) {
+					if (tab[i + a][j + a].jogador != jogador) {
+						return false;
+					}
+					else count++;
+				} else
+					return false;
+			}
+		}
+		
+		if(count > 3)return true;
+		else return false;
+	}
+	
+	boolean check_diag_dir_cima(int i, int j)
+	{
+		int jogador,count;
+		if(tab[i][j] != null){
+			jogador = tab[i][j].jogador;
+			count = 0;
+		}
+		else return false;
+		
+		for(int a=0;a<4;a++)
+		{
+			
+			if (i-a >= 0 && j+a <7) {
+				if (tab[i - a][j + a] != null) {
+					if (tab[i - a][j + a].jogador != jogador) {
+						return false;
+					}
+					else count++;
+				} else
+					return false;
+			}
+		}
+		
+		if(count > 3)return true;
+		else return false;
+	}
+	
 	boolean check_full(){
-		while(true){
+		
 			for(int i=0;i<6;i++){
 				for(int j=0;j<7;j++){
 					if(tab[i][j]==null)
@@ -266,7 +338,7 @@ public class Tabela implements Screen {
 			}
 			Gdx.app.log("board full", " " + !end_game_F);
 			return true;
-		}
+		
 	}
 
 	@Override
