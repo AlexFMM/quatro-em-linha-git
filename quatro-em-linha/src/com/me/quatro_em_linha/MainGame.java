@@ -15,7 +15,7 @@ public class MainGame extends Game {
 	public static ShapeRenderer renderer;
 	float ratio;
 	
-	public static Sprite draw, pl1w, pl2w, tabela_spr,mn_back;
+	public static Sprite draw, pl1w, pl2w, tabela_spr,mn_back,logo_spr;
 	
 	Tabela jogo_actual;
 	Menu mainmenu;
@@ -27,12 +27,13 @@ public class MainGame extends Game {
 	    ratio = h/w;
 	    camera = new OrthographicCamera(1, ratio);
 	    batch = new SpriteBatch();
+	    batch.setProjectionMatrix(camera.combined);
 	    renderer = new ShapeRenderer();
 	    
 	    this.loadAssets();
 		mainmenu = new Menu(this,mn_back);
-		
-		this.setScreen(this.mainmenu);
+		FlashScreen logoscreen = new FlashScreen(this,logo_spr,mainmenu,60);
+		this.setScreen(logoscreen);
 	}
 	
 	private void loadAssets(){
@@ -66,13 +67,29 @@ public class MainGame extends Game {
 	    tabela_spr.setPosition(-tabela_spr.getWidth()/2, -tabela_spr.getHeight()/2);
 	    tabela_spr.getTexture().setFilter(TextureFilter.Linear, TextureFilter.Linear);
 	    
-	    
+	    logo_spr = new Sprite(new Texture(Gdx.files.internal("data/logo.png")));
+	    logo_spr.setSize(0.5f, 0.5f *logo_spr.getHeight() /logo_spr.getWidth());
+	    logo_spr.setOrigin(logo_spr.getWidth()/2,logo_spr.getHeight()/2);
+	    logo_spr.setPosition(-logo_spr.getWidth()/2, -logo_spr.getHeight()/2);
+	    logo_spr.getTexture().setFilter(TextureFilter.Linear, TextureFilter.Linear);
 	}
 	
 	public Tabela create_new_game(){
 		jogo_actual=null;
 		jogo_actual = new Tabela(this);
 		return jogo_actual;
+	}
+	
+	public void dispose()
+	{
+		MainGame.tabela_spr.getTexture().dispose();
+		MainGame.pl2w.getTexture().dispose();
+		MainGame.pl1w.getTexture().dispose();
+		MainGame.mn_back.getTexture().dispose();
+		MainGame.draw.getTexture().dispose();
+		MainGame.batch.dispose();
+		MainGame.renderer.dispose();
+		Gdx.app.log("dispose", "done");
 	}
 	
 }

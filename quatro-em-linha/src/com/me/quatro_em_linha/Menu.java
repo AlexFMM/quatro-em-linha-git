@@ -36,7 +36,7 @@ public class Menu implements Screen{
 	@Override
 	public void render(float delta) {
 		// TODO Auto-generated method stub
-		MainGame.batch.setProjectionMatrix(maingame.camera.combined);
+		
 		Gdx.gl.glClearColor(1, 0.8f, 0, 1);
 		Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
 		mpos.set(Gdx.input.getX(), Gdx.input.getY(), 0);
@@ -92,7 +92,7 @@ public class Menu implements Screen{
 	@Override
 	public void dispose() {
 		// TODO Auto-generated method stub
-		
+		maingame.dispose();
 	}
 
 }
